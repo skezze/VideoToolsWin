@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.ComboBox comboBox;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoToolsWin));
             this.inputfileButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.outputfileButton = new System.Windows.Forms.Button();
+            this.conversionFileButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.fileCheckBox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,10 +51,13 @@
             comboBox.FormattingEnabled = true;
             comboBox.Items.AddRange(new object[] {
             ".avi",
-            ".mkv",
             ".mp4",
+            ".webm",
+            ".mkv",
             ".flv",
-            ".webm"});
+            ".jpg",
+            ".png",
+            ".ico"});
             comboBox.Location = new System.Drawing.Point(424, 26);
             comboBox.Name = "comboBox";
             comboBox.Size = new System.Drawing.Size(76, 28);
@@ -81,15 +85,15 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "select input file";
             // 
-            // outputfileButton
+            // conversionFileButton
             // 
-            this.outputfileButton.Location = new System.Drawing.Point(694, 409);
-            this.outputfileButton.Name = "outputfileButton";
-            this.outputfileButton.Size = new System.Drawing.Size(94, 29);
-            this.outputfileButton.TabIndex = 2;
-            this.outputfileButton.Text = "Conversion";
-            this.outputfileButton.UseVisualStyleBackColor = true;
-            this.outputfileButton.Click += new System.EventHandler(this.button2_Click);
+            this.conversionFileButton.Location = new System.Drawing.Point(694, 409);
+            this.conversionFileButton.Name = "conversionFileButton";
+            this.conversionFileButton.Size = new System.Drawing.Size(94, 29);
+            this.conversionFileButton.TabIndex = 2;
+            this.conversionFileButton.Text = "Conversion";
+            this.conversionFileButton.UseVisualStyleBackColor = true;
+            this.conversionFileButton.Click += new System.EventHandler(this.conversionFileButton_Click);
             // 
             // label3
             // 
@@ -205,9 +209,10 @@
             this.Controls.Add(this.fileCheckBox);
             this.Controls.Add(comboBox);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.outputfileButton);
+            this.Controls.Add(this.conversionFileButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.inputfileButton);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "VideoToolsWin";
             this.Text = "VideoToolsWin";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.VideoToolsWin_DragDrop);
@@ -223,7 +228,7 @@
 
         private Button inputfileButton;
         private Label label1;
-        private Button outputfileButton;
+        private Button conversionFileButton;
         private Label label3;
         private CheckBox fileCheckBox;
         private Label label2;

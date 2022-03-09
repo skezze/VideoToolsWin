@@ -7,14 +7,7 @@ namespace VideoToolsWin
         public VideoToolsWin()
         {
             InitializeComponent();
-            GetDefaultStorages();
-            targetProcessName = "VideoToolsWin";
-            if (Process.GetProcessesByName(targetProcessName).Length > 1)
-            {
-                MessageBox.Show("1 more process started");
-                this.Close();
-                Application.Exit();
-            }
+            GetDefaultStorages();            
         }
         private bool convesion_state;
         private string selected_extension;
@@ -25,14 +18,18 @@ namespace VideoToolsWin
         private string parameters;
         public delegate void InvokeDelegate();
         private string lossles_parameter = "-qscale 0";
-        private string[] suported_extension = {
-        ".avi",".mkv", ".mp4",".flv",".webm"
-        };
+        private string[] suportedVideoExtension = {
+        ".avi",".mkv", ".mp4",".flv",".webm"};
+        private string[] suportedPhotoExtension = {
+        ".jpg",".png", ".ico"};
         private string defaultVideoStorage;
         private string defaultPhotoStorage;
-        string targetProcessName;
+        private string targetProcessName;
+        private enum extensionTypes {Video,Photo,Unsupported};
+        private extensionTypes fileType;
         private void GetDefaultStorages()
         {
+            // check files for valid, select default folders
             try
             {
                 if (File.Exists(@"D:\defaultVideoFolder.txt") && new FileInfo(@"D:\defaultVideoFolder.txt").Length != 0)
@@ -59,8 +56,9 @@ namespace VideoToolsWin
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void conversionFileButton_Click(object sender, EventArgs e)
         {
+           // running conversion
             if (convesion_state)
             {
                 outputVideoFile = Path.Combine(defaultVideoStorage, new string(Guid.NewGuid().ToString()).Replace("-", string.Empty));
@@ -79,9 +77,8 @@ namespace VideoToolsWin
         }
         private void selectExtension(object sender, EventArgs e)
         {
-
             ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.Text != String.Empty && inputVideoFile != string.Empty)
+            if (fileType==extensionTypes.Video||fileType==extensionTypes.Photo)
             {
                 selected_extension = comboBox.Text;
                 convesion_state = true;
@@ -89,6 +86,7 @@ namespace VideoToolsWin
             else
             {
                 convesion_state = false;
+                MessageBox.Show("select first input file");
             }
         }
 
@@ -100,12 +98,37 @@ namespace VideoToolsWin
             openFileDialog.ShowDialog();
             if (openFileDialog.FileName != String.Empty)
             {
-                inputVideoFile = openFileDialog.FileName;
-                fileCheckBox.Checked = true;
-                inputFilePathLabel.Text = openFileDialog.FileName;
+                string filename = openFileDialog.FileName;
+                afterSelectFileConfigurator(filename);
             }
         }
 
+        private void afterSelectFileConfigurator(string filename)
+            //give path to file on input and he check data, configure solo project state
+        {
+            if (returnTrueExtension(filename))
+            {
+                if (returnTypeExtension(filename) == extensionTypes.Video)
+                {
+                    fileCheckBox.Checked = true;
+                    inputVideoFile = inputFilePathLabel.Text = filename;
+                    inputPhotoFile = String.Empty;
+                    fileType = extensionTypes.Video;
+                }
+                if (returnTypeExtension(filename) == extensionTypes.Photo)
+                {
+                    fileCheckBox.Checked = true;
+                    inputPhotoFile = inputFilePathLabel.Text = filename;
+                    fileType = extensionTypes.Photo;
+                    inputVideoFile = String.Empty;
+                }
+            }
+            else
+            {
+                fileCheckBox.Checked = false;
+                inputFilePathLabel.Text = "unsupported";
+            }
+        }
 
         private void VideoToolsWin_DragEnter(object sender, DragEventArgs e)
         {
@@ -116,18 +139,10 @@ namespace VideoToolsWin
 
         private void VideoToolsWin_DragDrop(object sender, DragEventArgs e)
         {
+            string filename = (e.Data.GetData(DataFormats.FileDrop, false) as string[])[0];
             label2.Visible = false;
-            if (returnTrueExtension((e.Data.GetData(DataFormats.FileDrop, false) as string[])[0]) != string.Empty)
-            {
-                fileCheckBox.Checked = true;
-                inputVideoFile = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-                inputFilePathLabel.Text = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-            }
-            else
-            {
-                fileCheckBox.Checked = false;
-                inputFilePathLabel.Text = "unsupported";
-            }
+            if(filename!= String.Empty)
+            afterSelectFileConfigurator(filename);
 
         }
 
@@ -136,15 +151,29 @@ namespace VideoToolsWin
             label2.Visible = false;
 
         }
-        private string returnTrueExtension(string primary)
+        private bool returnTrueExtension(string primary)
         {
-            if (suported_extension.Contains(Path.GetExtension(primary)))
+            if (suportedVideoExtension.Contains(Path.GetExtension(primary))|| suportedPhotoExtension.Contains(Path.GetExtension(primary)))
             {
-                return primary;
+                return true;
             }
             else
             {
-                return string.Empty;
+                return false;
+            }
+        }
+        private extensionTypes returnTypeExtension(string primary)
+        {
+            if (suportedVideoExtension.Contains(Path.GetExtension(primary)))
+            {
+                return extensionTypes.Video;
+            }
+            else if(suportedPhotoExtension.Contains(Path.GetExtension(primary))){
+             return extensionTypes.Photo;
+            }
+            else
+            {
+                return extensionTypes.Unsupported;
             }
         }
 
@@ -168,6 +197,11 @@ namespace VideoToolsWin
         {
             await Process.GetProcessesByName(targetProcessName)[0].WaitForExitAsync();
             progressLabel.Text = "task done";
+        }
+
+        private void backgroundWorkerIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
         }
     }
 }
