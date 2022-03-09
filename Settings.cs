@@ -12,31 +12,57 @@ namespace VideoToolsWin
 {
     public partial class Settings : Form
     {
-        public Settings(string def)
+        public Settings(string defV, string defP)
         {
             InitializeComponent();
-            defaultStorage = def;
-            viewDeafaultFolder.Text = defaultStorage;
+            defaultVideoStorage = defV;
+            defaultPhotoStorage = defP;
+            viewDeafaultVideoFolder.Text = defaultVideoStorage;
+            viewDeafaultPhotoFolder.Text = defaultPhotoStorage;
         }
-       
-        public string defaultStorage;
-        private void defaultPathButton_Click(object sender, EventArgs e)
+
+        public string defaultVideoStorage;
+        public string defaultPhotoStorage;
+        private void defaultVideoPathButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowDialog();
             if (dialog.SelectedPath != String.Empty)
             {
-                defaultStorage = dialog.SelectedPath;
-                viewDeafaultFolder.Text = dialog.SelectedPath;
-                serializeFolder();
+                defaultVideoStorage = dialog.SelectedPath;
+                viewDeafaultVideoFolder.Text = dialog.SelectedPath;
+                try
+                {
+                    File.WriteAllTextAsync(@"D:\defaultVideoFolder.txt", defaultVideoStorage);
+                }
+                catch (Exception ex)
+                {
+                    Logger.saveLogInFile(ex);
+                    MessageBox.Show("check logs");
+                }
+               
             }
 
         }
 
-        private void serializeFolder()
+        private void defaultPhotoPathButton_Click(object sender, EventArgs e)
         {
-            File.WriteAllTextAsync(@"D:\defaultFolder.txt", defaultStorage);
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.ShowDialog();
+            if (dialog.SelectedPath != String.Empty)
+            {
+                defaultPhotoStorage = dialog.SelectedPath;
+                viewDeafaultPhotoFolder.Text = dialog.SelectedPath;
+                try
+                {
+                    File.WriteAllTextAsync(@"D:\defaultPhotoFolder.txt", defaultPhotoStorage);
+                }
+                catch(Exception ex) {
+                    Logger.saveLogInFile(ex);
+                    MessageBox.Show("check logs");
+                }
+                
+            }
         }
-
     }
 }

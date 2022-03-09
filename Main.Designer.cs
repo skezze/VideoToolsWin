@@ -40,6 +40,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.inputFilePathLabel = new System.Windows.Forms.Label();
+            this.progressLabel = new System.Windows.Forms.Label();
             comboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
@@ -164,6 +166,27 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // inputFilePathLabel
+            // 
+            this.inputFilePathLabel.AutoSize = true;
+            this.inputFilePathLabel.Enabled = false;
+            this.inputFilePathLabel.Location = new System.Drawing.Point(12, 73);
+            this.inputFilePathLabel.Name = "inputFilePathLabel";
+            this.inputFilePathLabel.Size = new System.Drawing.Size(51, 20);
+            this.inputFilePathLabel.TabIndex = 15;
+            this.inputFilePathLabel.Text = "empty";
+            // 
+            // progressLabel
+            // 
+            this.progressLabel.AutoSize = true;
+            this.progressLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.progressLabel.Location = new System.Drawing.Point(139, 406);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(150, 28);
+            this.progressLabel.TabIndex = 16;
+            this.progressLabel.Text = "task is running...";
+            this.progressLabel.Visible = false;
+            // 
             // VideoToolsWin
             // 
             this.AllowDrop = true;
@@ -171,6 +194,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.progressLabel);
+            this.Controls.Add(this.inputFilePathLabel);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label5);
@@ -207,5 +232,7 @@
         private Label label5;
         private TextBox textBox1;
         private Button button1;
+        private Label inputFilePathLabel;
+        private Label progressLabel;
     }
 }
