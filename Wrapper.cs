@@ -7,15 +7,16 @@ namespace VideoToolsWin
         private String inputfile { get;set; }
         private String outputfile { get; set; }
         private String? parameters { get; set; }
-        private String? outextension { get; set; }
-        public String? processName { get; set; }    
+        private String outextension { get; set; }
+        public String ?processName { get; set; }    
 
-        public Wrapper(string inputfile, string outputfile, string? parameters, string? outextension)
+        public Wrapper(string inputfile, string outputfile, string? parameters, string outextension)
         {
             this.inputfile = inputfile;
             this.outputfile = outputfile;
             this.parameters = parameters;
             this.outextension = outextension;
+
         }
         
         public void ExecutCmdInNewThread() {

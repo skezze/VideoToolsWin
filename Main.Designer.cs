@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ComboBox comboBox;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoToolsWin));
+            this.conversionTypeComboBox = new System.Windows.Forms.ComboBox();
             this.inputfileButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.conversionFileButton = new System.Windows.Forms.Button();
@@ -43,28 +43,18 @@
             this.button1 = new System.Windows.Forms.Button();
             this.inputFilePathLabel = new System.Windows.Forms.Label();
             this.progressLabel = new System.Windows.Forms.Label();
-            comboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
-            // comboBox
+            // conversionTypeComboBox
             // 
-            comboBox.FormattingEnabled = true;
-            comboBox.Items.AddRange(new object[] {
-            ".avi",
-            ".mp4",
-            ".webm",
-            ".mkv",
-            ".flv",
-            ".jpg",
-            ".png",
-            ".ico"});
-            comboBox.Location = new System.Drawing.Point(424, 26);
-            comboBox.Name = "comboBox";
-            comboBox.Size = new System.Drawing.Size(76, 28);
-            comboBox.TabIndex = 6;
-            comboBox.Tag = "";
-            comboBox.TextUpdate += new System.EventHandler(this.selectExtension);
-            comboBox.TextChanged += new System.EventHandler(this.selectExtension);
+            this.conversionTypeComboBox.FormattingEnabled = true;
+            this.conversionTypeComboBox.Location = new System.Drawing.Point(424, 26);
+            this.conversionTypeComboBox.Name = "conversionTypeComboBox";
+            this.conversionTypeComboBox.Size = new System.Drawing.Size(76, 28);
+            this.conversionTypeComboBox.TabIndex = 6;
+            this.conversionTypeComboBox.Tag = "";
+            this.conversionTypeComboBox.TextUpdate += new System.EventHandler(this.selectExtension);
+            this.conversionTypeComboBox.TextChanged += new System.EventHandler(this.selectExtension);
             // 
             // inputfileButton
             // 
@@ -207,7 +197,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.fileCheckBox);
-            this.Controls.Add(comboBox);
+            this.Controls.Add(this.conversionTypeComboBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.conversionFileButton);
             this.Controls.Add(this.label1);
@@ -239,5 +229,6 @@
         private Button button1;
         private Label inputFilePathLabel;
         private Label progressLabel;
+        private ComboBox conversionTypeComboBox;
     }
 }
