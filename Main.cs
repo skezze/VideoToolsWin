@@ -7,26 +7,26 @@ namespace VideoToolsWin
         public VideoToolsWin()
         {
             InitializeComponent();
-            GetDefaultStorages();            
+            GetDefaultFolders();            
         }
-        private string? selected_extension;
+        private string? selectedExtension;
         private string? inputVideoFile;
         private string? outputVideoFile;
         private string? inputPhotoFile;
         private string? outputPhotoFile;
         private string? parameters;
         public delegate void InvokeDelegate();
-        private string losslesVideoParameter = "-qscale 0";
-        private string[] suportedVideoExtension = {
+        private const string LosslessVideoParameter = "-qscale 0";
+        private readonly string[] supportedVideoExtension = {
         ".avi",".mkv", ".mp4",".flv",".webm"};
-        private string[] suportedPhotoExtension = {
+        private readonly string[] supportedPhotoExtension = {
         ".jpg",".png", ".ico"};
         private string? defaultVideoStorage;
         private string? defaultPhotoStorage;
         private string? targetProcessName;
-        private enum extensionTypes {Video,Photo};
-        private extensionTypes fileType;
-        private void GetDefaultStorages()
+        private enum ExtensionTypes {Video,Photo};
+        private ExtensionTypes fileType;
+        private void GetDefaultFolders()
         {
             // check files for valid, select default folders
             try
@@ -60,12 +60,12 @@ namespace VideoToolsWin
             // running conversion
             try
             {
-                if (!String.IsNullOrEmpty(selected_extension))
+                if (!String.IsNullOrEmpty(selectedExtension))
                 {
-                    if (fileType == extensionTypes.Video && !String.IsNullOrEmpty(defaultVideoStorage) && !String.IsNullOrEmpty(inputVideoFile))
+                    if (fileType == ExtensionTypes.Video && !String.IsNullOrEmpty(defaultVideoStorage) && !String.IsNullOrEmpty(inputVideoFile))
                     {
                         outputVideoFile = Path.Combine(defaultVideoStorage, new string(Guid.NewGuid().ToString()).Replace("-", string.Empty));
-                        Wrapper wrapper = new Wrapper(inputVideoFile, outputVideoFile, (enabled_lossles.Checked == true) ? (parameters + losslesVideoParameter) : parameters, selected_extension);
+                        Wrapper wrapper = new Wrapper(inputVideoFile, outputVideoFile, (enabled_lossles.Checked == true) ? (parameters + LosslessVideoParameter) : parameters, selectedExtension);
                         progressLabel.Text = "task is running...";
                         progressLabel.Visible = true;
                         wrapper.ExecutCmdInNewThread();
@@ -78,9 +78,9 @@ namespace VideoToolsWin
                             throw new Exception();
                         }
 
-                        progressLabel.BeginInvoke(new InvokeDelegate(processChecker));
+                        progressLabel.BeginInvoke(new InvokeDelegate(ProcessChecker));
                     }
-                    if (fileType == extensionTypes.Photo)
+                    else if (fileType == ExtensionTypes.Photo && !String.IsNullOrEmpty(defaultPhotoStorage) && !String.IsNullOrEmpty(inputPhotoFile))
                     {
                     }
                     else
@@ -97,9 +97,9 @@ namespace VideoToolsWin
         private void selectExtension(object sender, EventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            if (fileType==extensionTypes.Video||fileType==extensionTypes.Photo)
+            if (fileType==ExtensionTypes.Video||fileType==ExtensionTypes.Photo)
             {
-                selected_extension = comboBox.Text;
+                selectedExtension = comboBox.Text;
             }
             else
             {
@@ -107,7 +107,7 @@ namespace VideoToolsWin
             }
         }
 
-        private void inputfileButton_Click(object sender, EventArgs e)
+        private void inputFileButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "All files|*.*";
@@ -116,30 +116,30 @@ namespace VideoToolsWin
             if (!String.IsNullOrEmpty(openFileDialog.FileName))
             {
                 string filename = openFileDialog.FileName;
-                afterSelectFileConfigurator(filename);
+                AfterSelectFileConfigurator(filename);
             }
         }
 
-        private void afterSelectFileConfigurator(string filename)
-            //give path to file on input and he check data, configure solo project state
+        private void AfterSelectFileConfigurator(string filename)
+            //give path to file on input and he check data, configure project state
         {
-            if (returnTrueExtension(filename))
+            if (ReturnTrueExtension(filename))
             {
-                if (returnTypeExtension(filename) == extensionTypes.Video)
+                if (ReturnTypeExtension(filename) == ExtensionTypes.Video)
                 {
                     fileCheckBox.Checked = true;
                     inputVideoFile = inputFilePathLabel.Text = filename;
                     inputPhotoFile = String.Empty;
-                    fileType = extensionTypes.Video;
-                    conversionTypeComboBox.Items.AddRange(suportedVideoExtension);
+                    fileType = ExtensionTypes.Video;
+                    conversionTypeComboBox.Items.AddRange(supportedVideoExtension as object[]);
                 }
-                if (returnTypeExtension(filename) == extensionTypes.Photo)
+                if (ReturnTypeExtension(filename) == ExtensionTypes.Photo)
                 {
                     fileCheckBox.Checked = true;
                     inputPhotoFile = inputFilePathLabel.Text = filename;
-                    fileType = extensionTypes.Photo;
+                    fileType = ExtensionTypes.Photo;
                     inputVideoFile = String.Empty;
-                    conversionTypeComboBox.Items.AddRange(suportedPhotoExtension);
+                    conversionTypeComboBox.Items.AddRange(supportedPhotoExtension as object[]);
                 }
             }
             else
@@ -162,8 +162,8 @@ namespace VideoToolsWin
         {
             string filename = (e.Data.GetData(DataFormats.FileDrop, false) as string[])[0];
             label2.Visible = false;
-            if(!String.IsNullOrEmpty(filename))
-            afterSelectFileConfigurator(filename);
+            if(!String.IsNullOrEmpty(filename)) 
+                AfterSelectFileConfigurator(filename);
 
         }
 
@@ -172,9 +172,9 @@ namespace VideoToolsWin
             label2.Visible = false;
 
         }
-        private bool returnTrueExtension(string primary)
+        private bool ReturnTrueExtension(string primary)
         {
-            if (suportedVideoExtension.Contains(Path.GetExtension(primary))|| suportedPhotoExtension.Contains(Path.GetExtension(primary)))
+            if (supportedVideoExtension.Contains(Path.GetExtension(primary))|| supportedPhotoExtension.Contains(Path.GetExtension(primary)))
             {
                 return true;
             }
@@ -183,15 +183,15 @@ namespace VideoToolsWin
                 return false;
             }
         }
-        private extensionTypes returnTypeExtension(string primary)
+        private ExtensionTypes ReturnTypeExtension(string primary)
         {
-            if (suportedVideoExtension.Contains(Path.GetExtension(primary)))
+            if (supportedVideoExtension.Contains(Path.GetExtension(primary)))
             {
-                return extensionTypes.Video;
+                return ExtensionTypes.Video;
             }
             else
             {
-                return extensionTypes.Photo;
+                return ExtensionTypes.Photo;
             }
         }
 
@@ -211,16 +211,16 @@ namespace VideoToolsWin
             {
                 Settings settings = new Settings(defaultVideoStorage, defaultPhotoStorage);
                 settings.ShowDialog();
-                GetDefaultStorages();
+                GetDefaultFolders();
             }
         }
-        private async void processChecker()
+        private async void ProcessChecker()
         {
             await Process.GetProcessesByName(targetProcessName)[0].WaitForExitAsync();
             progressLabel.Text = "task done";
         }
 
-        private void backgroundWorkerIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void BackgroundWorkerIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.Show();
         }

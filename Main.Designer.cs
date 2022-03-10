@@ -64,7 +64,7 @@
             this.inputfileButton.TabIndex = 0;
             this.inputfileButton.Text = "select";
             this.inputfileButton.UseVisualStyleBackColor = true;
-            this.inputfileButton.Click += new System.EventHandler(this.inputfileButton_Click);
+            this.inputfileButton.Click += new System.EventHandler(this.inputFileButton_Click);
             // 
             // label1
             // 
