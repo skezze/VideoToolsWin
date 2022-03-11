@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Drawing.Imaging;
+using Microsoft.VisualBasic;
 
 namespace VideoToolsWin
 {
@@ -7,7 +9,14 @@ namespace VideoToolsWin
         public VideoToolsWin()
         {
             InitializeComponent();
-            GetDefaultFolders();            
+            GetDefaultSettings();    
+            if(GPUUsing)
+                if (GPUName==GPUs.Radeon) 
+                {accelerationParameters = "--hwaccel vaapi"; }
+                else if (GPUName == GPUs.Nvidia) 
+                {accelerationParameters = "-hwaccel cuvid -c:v h264_cuvid -i <ввод> -c:v h264_nvenc"; }
+                
+
         }
         private string? selectedExtension;
         private string? inputVideoFile;
@@ -15,6 +24,10 @@ namespace VideoToolsWin
         private string? inputPhotoFile;
         private string? outputPhotoFile;
         private string? parameters;
+        private string? accelerationParameters;
+        private enum GPUs { Nvidia, Radeon }
+        private GPUs GPUName;
+        private bool GPUUsing = false;
         public delegate void InvokeDelegate();
         private const string LosslessVideoParameter = "-qscale 0";
         private readonly string[] supportedVideoExtension = {
@@ -26,7 +39,8 @@ namespace VideoToolsWin
         private string? targetProcessName;
         private enum ExtensionTypes {Video,Photo};
         private ExtensionTypes fileType;
-        private void GetDefaultFolders()
+        
+        private void GetDefaultSettings()
         {
             // check files for valid, select default folders
             try
@@ -48,10 +62,21 @@ namespace VideoToolsWin
                 {
                     throw new Exception();
                 }
+                if (File.Exists(@"D:\GPU.txt") && new FileInfo(@"D:\GPU.txt").Length != 0)
+                {
+                     String[] tempStrings = (File.ReadAllLines(@"D:\GPU.txt"));
+                     GPUUsing = Convert.ToBoolean(tempStrings[0]) == true ? true : false;
+                    if(GPUUsing)
+                     GPUName = tempStrings[1] == "Radeon" ? GPUs.Radeon : GPUs.Nvidia;
+                }
+                else
+                {
+                    throw new Exception();
+                }
             }
             catch
             {
-                MessageBox.Show("select default folders in settings");
+                MessageBox.Show("configure app in settings");
             }
         }
 
@@ -65,13 +90,13 @@ namespace VideoToolsWin
                     if (fileType == ExtensionTypes.Video && !String.IsNullOrEmpty(defaultVideoStorage) && !String.IsNullOrEmpty(inputVideoFile))
                     {
                         outputVideoFile = Path.Combine(defaultVideoStorage, new string(Guid.NewGuid().ToString()).Replace("-", string.Empty));
-                        Wrapper wrapper = new Wrapper(inputVideoFile, outputVideoFile, (enabled_lossles.Checked == true) ? (parameters + LosslessVideoParameter) : parameters, selectedExtension);
+                        Wrapper wrapper = new Wrapper(accelerationParameters, inputVideoFile, outputVideoFile, (enabled_lossles.Checked == true) ? (parameters + LosslessVideoParameter) : parameters, selectedExtension);
                         progressLabel.Text = "task is running...";
                         progressLabel.Visible = true;
-                        wrapper.ExecutCmdInNewThread();
-                        if (!String.IsNullOrEmpty(wrapper.processName))
+                        wrapper.StartFFmpegWorkerAsync();
+                        if (!String.IsNullOrEmpty(wrapper.ProcessName))
                         {
-                            targetProcessName = wrapper.processName;
+                            targetProcessName = wrapper.ProcessName;
                         }
                         else
                         {
@@ -82,6 +107,8 @@ namespace VideoToolsWin
                     }
                     else if (fileType == ExtensionTypes.Photo && !String.IsNullOrEmpty(defaultPhotoStorage) && !String.IsNullOrEmpty(inputPhotoFile))
                     {
+                        Bitmap bitmap = new Bitmap(inputPhotoFile);
+
                     }
                     else
                     {
@@ -131,6 +158,10 @@ namespace VideoToolsWin
                     inputVideoFile = inputFilePathLabel.Text = filename;
                     inputPhotoFile = String.Empty;
                     fileType = ExtensionTypes.Video;
+                    label4.Visible = true;
+                    enabled_lossles.Visible = true;
+                    label5.Visible = true;
+                    parametersTextBox.Visible = true;
                     conversionTypeComboBox.Items.AddRange(supportedVideoExtension as object[]);
                 }
                 if (ReturnTypeExtension(filename) == ExtensionTypes.Photo)
@@ -139,6 +170,10 @@ namespace VideoToolsWin
                     inputPhotoFile = inputFilePathLabel.Text = filename;
                     fileType = ExtensionTypes.Photo;
                     inputVideoFile = String.Empty;
+                    label4.Visible = false;
+                    enabled_lossles.Visible = false;
+                    label5.Visible = false;
+                    parametersTextBox.Visible = false;
                     conversionTypeComboBox.Items.AddRange(supportedPhotoExtension as object[]);
                 }
             }
@@ -202,7 +237,7 @@ namespace VideoToolsWin
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            parameters = textBox1.Text;
+            parameters = parametersTextBox.Text;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -211,7 +246,7 @@ namespace VideoToolsWin
             {
                 Settings settings = new Settings(defaultVideoStorage, defaultPhotoStorage);
                 settings.ShowDialog();
-                GetDefaultFolders();
+                GetDefaultSettings();
             }
         }
         private async void ProcessChecker()

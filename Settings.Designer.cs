@@ -34,6 +34,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.viewDeafaultPhotoFolder = new System.Windows.Forms.TextBox();
             this.defaultPhotoPathButton = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.usingGpuCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // defaultVideoPathButton
@@ -90,11 +92,34 @@
             this.defaultPhotoPathButton.UseVisualStyleBackColor = true;
             this.defaultPhotoPathButton.Click += new System.EventHandler(this.defaultPhotoPathButton_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(17, 170);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 20);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "using gpu";
+            this.label3.Visible = false;
+            // 
+            // usingGpuCheckBox
+            // 
+            this.usingGpuCheckBox.AutoSize = true;
+            this.usingGpuCheckBox.Location = new System.Drawing.Point(106, 173);
+            this.usingGpuCheckBox.Name = "usingGpuCheckBox";
+            this.usingGpuCheckBox.Size = new System.Drawing.Size(18, 17);
+            this.usingGpuCheckBox.TabIndex = 7;
+            this.usingGpuCheckBox.UseVisualStyleBackColor = true;
+            this.usingGpuCheckBox.Visible = false;
+            this.usingGpuCheckBox.CheckedChanged += new System.EventHandler(this.usingGpuCheckBox_CheckedChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.usingGpuCheckBox);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.viewDeafaultPhotoFolder);
             this.Controls.Add(this.defaultPhotoPathButton);
@@ -116,5 +141,7 @@
         private Label label2;
         private TextBox viewDeafaultPhotoFolder;
         private Button defaultPhotoPathButton;
+        private Label label3;
+        private CheckBox usingGpuCheckBox;
     }
 }

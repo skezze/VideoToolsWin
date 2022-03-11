@@ -39,7 +39,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.enabled_lossles = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.parametersTextBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.inputFilePathLabel = new System.Windows.Forms.Label();
             this.progressLabel = new System.Windows.Forms.Label();
@@ -123,6 +123,7 @@
             this.label4.Size = new System.Drawing.Size(55, 20);
             this.label4.TabIndex = 9;
             this.label4.Text = "Losless";
+            this.label4.Visible = false;
             // 
             // enabled_lossles
             // 
@@ -132,6 +133,7 @@
             this.enabled_lossles.Size = new System.Drawing.Size(18, 17);
             this.enabled_lossles.TabIndex = 10;
             this.enabled_lossles.UseVisualStyleBackColor = true;
+            this.enabled_lossles.Visible = false;
             // 
             // label5
             // 
@@ -141,14 +143,16 @@
             this.label5.Size = new System.Drawing.Size(89, 20);
             this.label5.TabIndex = 11;
             this.label5.Text = "add options";
+            this.label5.Visible = false;
             // 
-            // textBox1
+            // parametersTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(698, 30);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(90, 27);
-            this.textBox1.TabIndex = 12;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.parametersTextBox.Location = new System.Drawing.Point(698, 30);
+            this.parametersTextBox.Name = "parametersTextBox";
+            this.parametersTextBox.Size = new System.Drawing.Size(90, 27);
+            this.parametersTextBox.TabIndex = 12;
+            this.parametersTextBox.Visible = false;
+            this.parametersTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // button1
             // 
@@ -191,7 +195,7 @@
             this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.inputFilePathLabel);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.parametersTextBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.enabled_lossles);
             this.Controls.Add(this.label4);
@@ -225,7 +229,7 @@
         private Label label4;
         private CheckBox enabled_lossles;
         private Label label5;
-        private TextBox textBox1;
+        private TextBox parametersTextBox;
         private Button button1;
         private Label inputFilePathLabel;
         private Label progressLabel;
