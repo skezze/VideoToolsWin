@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing.Imaging;
+using Aspose.Imaging.ImageOptions;
 
 namespace VideoToolsWin
 {
@@ -7,19 +8,20 @@ namespace VideoToolsWin
     {
         private String InputFile { get;set; }
         private String OutputFile { get; set; }
-        private String AccelerationParameters { get; set; }
-        private String? Parameters { get; set; }
+        private String? Options { get; set; }
+        private String? InputFileOptions { get; set; }
         private String OutExtension { get; set; }
+        private String? OutputFileOptions { get; set; }
         public String ?ProcessName { get; set; }    
 
-        public Wrapper(string accelerationParameters, string inputFile, string outputFile, string? parameters, string outExtension)
+        public Wrapper(string options, string? inputFileOptions, string inputFile,string outputFileOptions,string outputFile, string outExtension)
         {
             this.InputFile = inputFile;
             this.OutputFile = outputFile;
-            this.Parameters = parameters;
+            this.InputFileOptions = inputFileOptions;
             this.OutExtension = outExtension;
-            this.AccelerationParameters = accelerationParameters;
-
+            this.Options = options;
+            this.OutputFileOptions = outputFileOptions;
         }
         
         public void StartFFmpegWorkerAsync() {
@@ -27,8 +29,8 @@ namespace VideoToolsWin
             {
                 Process proc = new Process();
 
-                proc.StartInfo.FileName = Path.Combine(@"C:\Users\skezze\source\repos\VideoToolsWin\exec\ffmpeg.exe"); 
-                proc.StartInfo.Arguments = String.Format($"{AccelerationParameters} -i {InputFile} {Parameters} {OutputFile + OutExtension}");
+                proc.StartInfo.FileName = @Path.Combine(Directory.GetCurrentDirectory(), "ffmpeg.exe"); 
+                proc.StartInfo.Arguments = String.Format($"{Options} {InputFileOptions} -i {InputFile} {OutputFileOptions} {OutputFile + OutExtension}");
                 proc.StartInfo.UseShellExecute = false; 
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.RedirectStandardOutput = true;
@@ -42,14 +44,14 @@ namespace VideoToolsWin
             }
         
         }
-        public static void StartFFmpegWorker(string accelerationParameters, string inputFile,string parameters, string outputFile, string outExtension)
+        public static void StartFFmpegWorker(string options, string inputFileOptions,string inputFile,string OutputFileOptions, string outputFile, string outExtension)
         {
             try
             {
                 outExtension = outExtension.ToLower();
                 Process proc = new Process();
-                proc.StartInfo.FileName = Path.Combine(@"C:\Users\skezze\source\repos\VideoToolsWin\exec\ffmpeg.exe");
-                proc.StartInfo.Arguments = String.Format($"{accelerationParameters} -i {inputFile} {parameters} {outputFile + outExtension}");
+                proc.StartInfo.FileName = @Path.Combine(Directory.GetCurrentDirectory(), "ffmpeg.exe");
+                proc.StartInfo.Arguments = String.Format($"{options} {inputFileOptions} -i {inputFile} {OutputFileOptions} {outputFile + outExtension}");
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.RedirectStandardOutput = true; ;
@@ -65,8 +67,48 @@ namespace VideoToolsWin
 
         }
 
+        public static void StartImageCompression(string inputFile, string outputFile, string outExtension,int quality)
+        {
+            
+            SavePicture(inputFile, outputFile, outExtension);
+            outputFile += outExtension;
+            var FileName = Path.GetFileName(inputFile);
+            
+            using (Bitmap bmp1 = new Bitmap(inputFile))
+            {
+                ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+
+                System.Drawing.Imaging.Encoder QualityEncoder = System.Drawing.Imaging.Encoder.Quality;
+
+                EncoderParameters myEncoderParameters = new EncoderParameters(1);
+
+                EncoderParameter myEncoderParameter = new EncoderParameter(QualityEncoder, quality);
+
+                myEncoderParameters.Param[0] = myEncoderParameter;
+                bmp1.Save(outputFile, jpgEncoder, myEncoderParameters);
+
+            }
+        }
+        private static ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
+        }
         public static void StartImageExtensionConversion(string inputFile, string outputFile, string outExtension)
         {
+            SavePicture(inputFile, outputFile, outExtension);
+        }
+
+        public static void SavePicture(string inputFile, string outputFile, string outExtension)
+        {
+            outputFile += outExtension;
             try
             {
                 outExtension = outExtension.ToLower();
@@ -118,7 +160,6 @@ namespace VideoToolsWin
             {
                 Logger.saveLogInFile(ex);
             }
-            
         }
     }
 }
