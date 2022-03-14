@@ -4,7 +4,7 @@ using Aspose.Imaging.ImageOptions;
 
 namespace VideoToolsWin
 {
-    public class Wrapper
+    public class FFmpegImageWrapper
     {
         private String InputFile { get;set; }
         private String OutputFile { get; set; }
@@ -14,7 +14,7 @@ namespace VideoToolsWin
         private String? OutputFileOptions { get; set; }
         public String ?ProcessName { get; set; }    
 
-        public Wrapper(string options, string? inputFileOptions, string inputFile,string outputFileOptions,string outputFile, string outExtension)
+        public FFmpegImageWrapper(string options, string? inputFileOptions, string inputFile,string outputFileOptions,string outputFile, string outExtension)
         {
             this.InputFile = inputFile;
             this.OutputFile = outputFile;
@@ -78,7 +78,7 @@ namespace VideoToolsWin
             {
                 ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
 
-                System.Drawing.Imaging.Encoder QualityEncoder = System.Drawing.Imaging.Encoder.Quality;
+                Encoder QualityEncoder = Encoder.Quality;
 
                 EncoderParameters myEncoderParameters = new EncoderParameters(1);
 

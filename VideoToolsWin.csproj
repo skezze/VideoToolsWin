@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Aspose.Imaging" Version="22.3.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
   </ItemGroup>

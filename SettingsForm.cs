@@ -3,9 +3,9 @@ using FxResources.System.Management;
 
 namespace VideoToolsWin
 {
-    public partial class Settings : Form
+    public partial class SettingsForm : Form
     {
-        public Settings(string defV, string defP, bool gpuUsing)
+        public SettingsForm(string defV, string defP, bool gpuUsing)
         {
             InitializeComponent();
             this.gpuUsing = gpuUsing;

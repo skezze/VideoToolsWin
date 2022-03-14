@@ -90,7 +90,7 @@ namespace VideoToolsWin
                     {
                         outputPhotoFile = inputPhotoFile = String.Empty;
                         outputVideoFile = Path.Combine(defaultVideoStorage, new string(Guid.NewGuid().ToString()).Replace("-", string.Empty));
-                        Wrapper wrapper = new Wrapper(options, inputFileOptions, inputVideoFile, outputFileOptions, outputVideoFile,selectedExtension);
+                        FFmpegImageWrapper wrapper = new FFmpegImageWrapper(options, inputFileOptions, inputVideoFile, outputFileOptions, outputVideoFile,selectedExtension);
                         progressLabel.Text = "task is running...";
                         progressLabel.Visible = true;
                         wrapper.StartFFmpegWorkerAsync();
@@ -109,7 +109,7 @@ namespace VideoToolsWin
                     {
                         outputVideoFile = inputVideoFile = String.Empty;
                         outputPhotoFile = Path.Combine(defaultPhotoStorage, new string(Guid.NewGuid().ToString()).Replace("-", string.Empty));
-                        Wrapper.StartImageExtensionConversion(inputPhotoFile,outputPhotoFile,selectedExtension);
+                        FFmpegImageWrapper.StartImageExtensionConversion(inputPhotoFile,outputPhotoFile,selectedExtension);
                         MessageBox.Show("conversion done");
                     }
                     else
@@ -243,7 +243,7 @@ namespace VideoToolsWin
         {
             if (!String.IsNullOrEmpty(defaultVideoStorage)&& !String.IsNullOrEmpty(defaultPhotoStorage))
             {
-                Settings settings = new Settings(defaultVideoStorage, defaultPhotoStorage,gpuUsing);
+                SettingsForm settings = new SettingsForm(defaultVideoStorage, defaultPhotoStorage,gpuUsing);
                 settings.ShowDialog();
                 GetDefaultSettings();
             }
@@ -267,7 +267,7 @@ namespace VideoToolsWin
                         outputPhotoFile = inputPhotoFile = String.Empty;
                         outputFileOptions = "-vcodec libx265 -r 27 -crf 35";
                         outputVideoFile = Path.Combine(defaultVideoStorage, new string(Guid.NewGuid().ToString()).Replace("-", string.Empty)+"compressed");
-                        Wrapper wrapper = new Wrapper(options, inputFileOptions, inputVideoFile, outputFileOptions, outputVideoFile, selectedExtension);
+                        FFmpegImageWrapper wrapper = new FFmpegImageWrapper(options, inputFileOptions, inputVideoFile, outputFileOptions, outputVideoFile, selectedExtension);
                         progressLabel.Text = "task is running...";
                         progressLabel.Visible = true;
                         wrapper.StartFFmpegWorkerAsync();
@@ -292,7 +292,7 @@ namespace VideoToolsWin
                             outputVideoFile = inputVideoFile = String.Empty;
                             outputPhotoFile = Path.Combine(defaultPhotoStorage,
                                 new string(Guid.NewGuid().ToString()).Replace("-", string.Empty)+"compressed");
-                            Wrapper.StartImageCompression(inputPhotoFile, outputPhotoFile, selectedExtension,
+                            FFmpegImageWrapper.StartImageCompression(inputPhotoFile, outputPhotoFile, selectedExtension,
                                 compressQuality);
                             MessageBox.Show("compression done");
                         }
