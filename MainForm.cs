@@ -265,7 +265,7 @@ namespace VideoToolsWin
                     if (fileType == ExtensionTypes.Video && !String.IsNullOrEmpty(defaultVideoStorage) && !String.IsNullOrEmpty(inputVideoFile))
                     {
                         outputPhotoFile = inputPhotoFile = String.Empty;
-                        outputFileOptions = "-vcodec libx265 -r 27 -crf 35";
+                        outputFileOptions = "-vcodec libx265 -crf 35";
                         outputVideoFile = Path.Combine(defaultVideoStorage, new string(Guid.NewGuid().ToString()).Replace("-", string.Empty)+"compressed");
                         FFmpegImageWrapper wrapper = new FFmpegImageWrapper(options, inputFileOptions, inputVideoFile, outputFileOptions, outputVideoFile, selectedExtension);
                         progressLabel.Text = "task is running...";
@@ -307,6 +307,15 @@ namespace VideoToolsWin
             {
                 Logger.saveLogInFile(ex);
                 MessageBox.Show("run ffmpeg process error");
+            }
+        }
+
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(targetProcessName))
+            {
+                Process.GetProcessesByName(targetProcessName)[0].Kill();
+                progressLabel.Text = "task stopped";
             }
         }
     }

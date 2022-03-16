@@ -16,7 +16,7 @@ namespace VideoToolsWin
 
         public FFmpegImageWrapper(string options, string? inputFileOptions, string inputFile,string outputFileOptions,string outputFile, string outExtension)
         {
-            this.InputFile = inputFile;
+            this.InputFile = $"\"{inputFile}\"";
             this.OutputFile = outputFile;
             this.InputFileOptions = inputFileOptions;
             this.OutExtension = outExtension;

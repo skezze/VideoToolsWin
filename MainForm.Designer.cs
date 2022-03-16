@@ -42,6 +42,7 @@
             this.inputFilePathLabel = new System.Windows.Forms.Label();
             this.progressLabel = new System.Windows.Forms.Label();
             this.compressButton = new System.Windows.Forms.Button();
+            this.stopButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // conversionTypeComboBox
@@ -181,6 +182,17 @@
             this.compressButton.UseVisualStyleBackColor = true;
             this.compressButton.Click += new System.EventHandler(this.compressButton_Click);
             // 
+            // stopButton
+            // 
+            this.stopButton.Location = new System.Drawing.Point(322, 204);
+            this.stopButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(82, 22);
+            this.stopButton.TabIndex = 18;
+            this.stopButton.Text = "Stop";
+            this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
             // VideoToolsWin
             // 
             this.AllowDrop = true;
@@ -188,6 +200,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ClientSize = new System.Drawing.Size(592, 237);
+            this.Controls.Add(this.stopButton);
             this.Controls.Add(this.compressButton);
             this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.inputFilePathLabel);
@@ -231,5 +244,6 @@
         private Label progressLabel;
         private ComboBox conversionTypeComboBox;
         private Button compressButton;
+        private Button stopButton;
     }
 }
